@@ -1,0 +1,13 @@
+C++ Core Guidelines
+https://isocpp.github.io/CppCoreGuidelines/
+https://github.com/isocpp/CppCoreGuidelines
+https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md
+
+Bjarne Stroustrup's Homepage
+https://www.stroustrup.com/
+
+Stroustrup: C++
+https://www.stroustrup.com/C++.html
+
+Stroustrup: Programming -- Principles and Practice Using C++ (3rd Edition)
+https://www.stroustrup.com/programming.html
