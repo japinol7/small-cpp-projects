@@ -31,7 +31,7 @@ constexpr int kSnakeBodySizeToIncreaseMin = 0;
 constexpr int kSnakeBodySizeToIncreaseMax = 5;
 constexpr float kSnakeInitialSpeedMin = 0.3f;
 constexpr float kSnakeInitialSpeedMax = 0.95f;
-constexpr float kSnakeInitialSpeedMaxTotal = 0.98f;
+constexpr float kSnakeSpeedMax = 0.98f;
 
 constexpr bool kSnakeDieWhenBiteOwnTail = true;
 
@@ -49,7 +49,7 @@ const string kLogMsgAppStart = "Start app " + kAppNameWithVersion
 const string kLogMsgAppEnd = "End app " + kAppName + "\n";
 
 const string kAppCLIArgumentsUsage = ""
-    "usage: app [-h  help] [-f  fullscreen]\n"
+    "usage: app [-h  help]\n"
     "\t[-g  cells-width-qty] QTY\n"
     "\t[-b  body-pieces] QTY\n"
     "\t[-r  body-size-to-increase] QTY\n"

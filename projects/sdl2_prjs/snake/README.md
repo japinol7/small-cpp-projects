@@ -27,6 +27,7 @@
 ## Keyboard keys
      F1:    show a help screen while playing the game
      ESC:   exit the game
+     Alt + Enter:    toggle fullscreen window
      left,     a:    move snake to the left
      right,    d:    move snake to the right
      up,       w:    move snake up
@@ -35,7 +36,7 @@
 
 ## Usage
 
-	snake usage: app [-h  --help] [-f  --fullscreen]
+	snake usage: app [-h  --help]
                      [-g  --cells-width-qty] QTY 
                      [-b  --body-pieces] QTY 
                      [-r  --body-size-to-increase] QTY 
@@ -43,8 +44,6 @@
 	
 	optional arguments:
 	  -h, --help    show this help message and exit
-	  -f, 		--fullscreen
-	                start the game in full screen mode.
 	  -g QTY,	--cells-width-qty QTY
 	                cells qty for the width of the screen.
 	                Cells qty for the height of the screen is calculated automatically
@@ -60,7 +59,6 @@
 
 	Argument                Default     Interval
 	................        ......      .........
-	fullscreen              false
 	body-pieces             5           [0, 50]
 	cells-width-qty         100         [30, 250]
 	body-size-to-increase   1           [0, 5]
@@ -70,13 +68,11 @@
 **Examples of usage**
 
 	Run examples using bash on Linux:
-		$ ./snake --body-pieces 5 --cells-width-qty 90
-		$ ./snake --body-pieces 5 --cells-width-qty 90 --fullscreen
-		$ ./snake --body-pieces 30 --cells-width-qty 200 --snake-speed 0.95 --fullscreen
-		$ ./snake --body-pieces 5 --cells-width-qty 50 --snake-speed 0.4
+     $ ./snake --body-pieces 5 --cells-width-qty 90
+     $ ./snake --body-pieces 30 --cells-width-qty 200 --snake-speed 0.95
+     $ ./snake --body-pieces 5 --cells-width-qty 50 --snake-speed 0.4
 
 	Run examples using bash on Windows:
-		$ ./snake.exe --body-pieces 5 --cells-width-qty 90
-		$ ./snake.exe --body-pieces 5 --cells-width-qty 90 --fullscreen
-		$ ./snake.exe --body-pieces 30 --cells-width-qty 200 --snake-speed 0.95 --fullscreen
-		$ ./snake.exe --body-pieces 5 --cells-width-qty 50 --snake-speed 0.4
+     $ ./snake.exe --body-pieces 5 --cells-width-qty 90
+     $ ./snake.exe --body-pieces 30 --cells-width-qty 200 --snake-speed 0.95
+     $ ./snake.exe --body-pieces 5 --cells-width-qty 50 --snake-speed 0.4

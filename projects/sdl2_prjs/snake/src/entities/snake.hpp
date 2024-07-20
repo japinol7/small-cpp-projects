@@ -23,47 +23,56 @@ public:
               head_x(grid_width / 2),
               head_y(grid_height / 2) {}
 
-    void Update();
+    void draw(SDL_Renderer *renderer, SDL_Rect &loc_rect);
 
-    void GrowBody();
+    void update();
 
-    bool ThereIsASnakeInCell(int x, int y);
+    void growBody();
 
-    void ChangeDirection(Snake::Direction input, Snake::Direction opposite);
+    bool thereIsASnakeInCell(int x, int y);
 
-    void IncreaseSpeed();
+    void changeDirection(Snake::Direction input, Snake::Direction opposite);
+
+    void increaseSpeed();
 
     float head_x;
     float head_y;
+    std::vector<Uint8> head_color{0, 83, 255};
+    std::vector<Uint8> head_dead_color{255, 0, 0};
+    std::vector<Uint8> color{100, 0, 255};
     std::vector<SDL_Point> body_pieces;
     Direction direction = Direction::kUp;
     bool is_dead_when_bite_own_tail = kSnakeDieWhenBiteOwnTail;
     int body_size{0};
     bool is_alive{true};
-    float speed{app_options::SnakeInitialSpeed()};
+    float speed{app_options::snakeInitialSpeed()};
 
 private:
-    void UpdateHead();
+    void updateHead();
 
-    void UpdateBody(SDL_Point &prev_cell);
+    void updateBody(SDL_Point &prev_cell);
 
-    int grow_body_size{app_options::SnakeInitialBodySize()};
+    int grow_body_size{app_options::snakeInitialBodySize()};
     unsigned int grid_width;
     unsigned int grid_height;
 
-    [[nodiscard]] bool IsSnakeHeadInCell(int x, int y) const;
+    void drawHead(SDL_Renderer *renderer, SDL_Rect &loc_rect);
 
-    void AddPreviousHeadCellToSnakeBody(const SDL_Point &prev_head_cell);
+    void drawBody(SDL_Renderer *renderer, SDL_Rect &loc_rect);
 
-    void RemoveTailFromSnakeBody();
+    [[nodiscard]] bool isSnakeHeadInCell(int x, int y) const;
 
-    bool AreConditionsForSnakeToDie(const SDL_Point &current_head_cell);
+    void addPreviousHeadCellToSnakeBody(const SDL_Point &prev_head_cell);
 
-    void Kill();
+    void removeTailFromSnakeBody();
 
-    static bool HasSnakeHeadMoved(const SDL_Point &prev_cell, const SDL_Point &current_cell) ;
+    bool areConditionsForSnakeToDie(const SDL_Point &current_head_cell);
 
-    void WrapSnakeIfGoesOffScreen();
+    void kill();
+
+    static bool hasSnakeHeadMoved(const SDL_Point &prev_cell, const SDL_Point &current_cell) ;
+
+    void wrapSnakeIfGoesOffScreen();
 };
 
 #endif

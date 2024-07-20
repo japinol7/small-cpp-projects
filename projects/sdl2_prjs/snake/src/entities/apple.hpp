@@ -7,11 +7,15 @@
 
 class Apple {
 public:
-    void SetPos(int x, int y);
+    void setPos(int x, int y);
 
-    [[nodiscard]] int GetPosX() const;
+    [[nodiscard]] int getPosX() const;
 
-    [[nodiscard]] int GetPosY() const;
+    [[nodiscard]] int getPosY() const;
+
+    void draw(SDL_Renderer *renderer, SDL_Rect &loc_rect) const;
+
+    std::vector<Uint8> color{150, 220, 0};
 
 private:
     int pos_x{0};
