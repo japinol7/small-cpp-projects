@@ -1,0 +1,30 @@
+SDL_image
+Image decoding for many popular formats for Simple Directmedia Layer.
+
+> SDL2_image - SDL Wiki
+https://wiki.libsdl.org/SDL2_image/FrontPage
+
+> libsdl-org SDL_image
+https://github.com/libsdl-org/SDL_image
+
+> Currently version used in these examples:
+2.8.2
+..................................
+..................................
+
+
+
+..................................
+..................................
+> Download this SDL_image asset from the last release of SDL_image 2
+SDL2_image-devel-2.8.2-mingw.zip
+
+> lib path in these examples on Windows:
+set(JP_LIB_PATH "D:/dev/libs")
+set(SDL2_IMAGE_PATH ${JP_LIB_PATH}"/sdl_image_2/SDL2_image-2.8.2/x86_64-w64-mingw32")
+
+> Copy file SDL2_image.dll to folder cmake-build-debug
+..................................
+..................................
+
+.
