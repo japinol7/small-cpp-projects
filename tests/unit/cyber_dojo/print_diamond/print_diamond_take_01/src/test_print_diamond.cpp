@@ -1,10 +1,9 @@
 #include <gtest/gtest.h>
-#include <string>
+
 #include "../../../../projects/cyber_dojo/print_diamond/print_diamond_take_01/src/print_diamond.hpp"
 
 using namespace ::testing;
 
-// Test class for Diamond pattern generation
 class PrintDiamondTest : public Test {
 protected:
     // Test case structure for parameterized tests
@@ -14,9 +13,46 @@ protected:
     };
 };
 
+struct EmptyInputTestCase {
+    char input;
+    std::string expected;
+
+    static std::string GetTestName(
+        const TestParamInfo<EmptyInputTestCase>& info
+    ) {
+        if (info.param.input == '\0') {
+            return "EmptyInput";
+        }
+        if (info.param.input == ' ') {
+            return "SpaceCharacter";
+        }
+        return "NonAlphabetic_" + std::to_string(info.param.input);
+    }
+};
+
+class PrintDiamondEmptyInputTest : public TestWithParam<EmptyInputTestCase> {
+};
+
+TEST_P(PrintDiamondEmptyInputTest, CheckInvalidInput) {
+    const auto& [input, expected] = GetParam();
+    const Diamond diamond(input);
+    EXPECT_EQ(diamond.toString(), expected)
+        << "For input: '" << (input == '\0' ? '0' : input) << "'";
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    EmptyOrInvalidInputTests,
+    PrintDiamondEmptyInputTest,
+    testing::Values(
+        EmptyInputTestCase{'\0', ""},   // Empty input
+        EmptyInputTestCase{' ', ""},    // Space character
+        EmptyInputTestCase{'0', ""}     // Non-alphabetic character
+    ),
+    EmptyInputTestCase::GetTestName
+);
+
 // Test cases for empty or invalid input
 TEST_F(PrintDiamondTest, EmptyOrInvalidInput) {
-    // Array of test cases
     const std::vector<TestCase> testCases = {
         {'\0', ""},   // Empty input
         {' ', ""},    // Space character
@@ -150,7 +186,7 @@ TEST_F(PrintDiamondTest, LowercaseLetterConversion) {
 
 // Test for pattern consistency
 TEST_F(PrintDiamondTest, PatternConsistency) {
-    Diamond diamond('D');
+    const Diamond diamond('D');
 
     // Get the pattern vector
     const auto& pattern = diamond.getPattern();

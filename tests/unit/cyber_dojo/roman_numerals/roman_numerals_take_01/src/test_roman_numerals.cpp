@@ -1,59 +1,70 @@
 #include <gtest/gtest.h>
-#include <string>
+
 #include "../../../../projects/cyber_dojo/roman_numerals/roman_numerals_take_01/src/roman_numerals.hpp"
 
 using namespace ::testing;
 using namespace RomanNumerals;
 
-// Test class for Roman numeral conversions
-class RomanNumeralsTest : public Test {
-protected:
-    struct ToRomanTestCase {
-        int number;
-        std::string expected;
-        bool shouldSucceed;
-    };
+struct RomanNumeralTestCase {
+    int number;
+    std::string expected;
+    bool shouldSucceed;
+
+    static std::string GetTestName(
+        const TestParamInfo<RomanNumeralTestCase>& info
+    ) {
+        // Replace invalid filename characters with underscores
+        std::string name = std::to_string(info.param.number);
+        std::replace(name.begin(), name.end(), '-', '_');
+        return "Number_" + name;
+    }
 };
 
-// Test toRoman conversion
-TEST_F(RomanNumeralsTest, ToRoman) {
-    const std::vector<ToRomanTestCase> testCases = {
-        {1, "I", true},
-        {2, "II", true},
-        {3, "III", true},
-        {4, "IV", true},
-        {5, "V", true},
-        {9, "IX", true},
-        {10, "X", true},
-        {40, "XL", true},
-        {50, "L", true},
-        {73, "LXXIII", true},
-        {90, "XC", true},
-        {93, "XCIII", true},
-        {100, "C", true},
-        {400, "CD", true},
-        {500, "D", true},
-        {900, "CM", true},
-        {1000, "M", true},
-        {1984, "MCMLXXXIV", true},
-        {2023, "MMXXIII", true},
-        {3999, "MMMCMXCIX", true},
-        {0, "", false}, // Error case
-        {4000, "", false}, // Error case
-        {-1, "", false} // Error case
-    };
+class RomanNumeralsTest : public TestWithParam<RomanNumeralTestCase> {
+};
 
-    for (const auto& [number, expected, shouldSucceed] : testCases) {
-        std::string result = Converter::toRoman(number);
+TEST_P(RomanNumeralsTest, ToRoman) {
+    const auto& [number, expected, shouldSucceed] = GetParam();
+    const std::string result = Converter::toRoman(number);
 
-        if (shouldSucceed) {
-            EXPECT_FALSE(result.empty()) << "toRoman(" << number << ") should succeed";
-            EXPECT_EQ(expected, result)
-                << "toRoman(" << number << ") = " << result
-                << ", expected " << expected;
-        } else {
-            EXPECT_TRUE(result.empty())
-                << "toRoman(" << number << ") should return empty string for error";
-        }
+    if (shouldSucceed) {
+        EXPECT_FALSE(result.empty()) << "toRoman(" << number << ") should succeed";
+        EXPECT_EQ(result, expected)
+            << "toRoman(" << number << ") = " << result
+            << ", expected " << expected;
+    } else {
+        EXPECT_TRUE(result.empty())
+            << "toRoman(" << number << ") should return empty string for error";
     }
 }
+
+INSTANTIATE_TEST_SUITE_P(
+    RomanNumeralTests,
+    RomanNumeralsTest,
+    testing::Values(
+        RomanNumeralTestCase{1, "I", true},
+        RomanNumeralTestCase{2, "II", true},
+        RomanNumeralTestCase{3, "III", true},
+        RomanNumeralTestCase{4, "IV", true},
+        RomanNumeralTestCase{5, "V", true},
+        RomanNumeralTestCase{9, "IX", true},
+        RomanNumeralTestCase{10, "X", true},
+        RomanNumeralTestCase{40, "XL", true},
+        RomanNumeralTestCase{50, "L", true},
+        RomanNumeralTestCase{73, "LXXIII", true},
+        RomanNumeralTestCase{90, "XC", true},
+        RomanNumeralTestCase{93, "XCIII", true},
+        RomanNumeralTestCase{100, "C", true},
+        RomanNumeralTestCase{400, "CD", true},
+        RomanNumeralTestCase{500, "D", true},
+        RomanNumeralTestCase{900, "CM", true},
+        RomanNumeralTestCase{1000, "M", true},
+        RomanNumeralTestCase{1984, "MCMLXXXIV", true},
+        RomanNumeralTestCase{2023, "MMXXIII", true},
+        RomanNumeralTestCase{3999, "MMMCMXCIX", true},
+        RomanNumeralTestCase{0, "", false}, // Error case
+        RomanNumeralTestCase{4000, "", false}, // Error case
+        RomanNumeralTestCase{-1, "", false} // Error case
+    ),
+    RomanNumeralTestCase::GetTestName
+);

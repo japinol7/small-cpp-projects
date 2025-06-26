@@ -5,126 +5,165 @@
 using namespace ::testing;
 using namespace RomanNumeralsFull;
 
-// Test class for Roman numeral conversions
-class RomanNumeralsFullTest : public Test {
-protected:
-    struct ToRomanTestCase {
-        int number;
-        std::string expected;
-        bool shouldSucceed;
-    };
+// Test case structure for toRoman conversion
+struct ToRomanTestCase {
+    int number;
+    std::string expected;
+    bool shouldSucceed;
 
-    struct FromRomanTestCase {
-        std::string roman;
-        int expected;
-        bool shouldSucceed;
-    };
+    static std::string GetTestName(
+        const TestParamInfo<ToRomanTestCase>& info
+    ) {
+        // Replace invalid filename characters with underscores
+        std::string name = std::to_string(info.param.number);
+        std::replace(name.begin(), name.end(), '-', '_');
+        return "Number_" + name;
+    }
 };
 
-// Test toRoman conversion
-TEST_F(RomanNumeralsFullTest, ToRoman) {
-    const std::vector<ToRomanTestCase> testCases = {
-        {1, "I", true},
-        {2, "II", true},
-        {3, "III", true},
-        {4, "IV", true},
-        {5, "V", true},
-        {9, "IX", true},
-        {10, "X", true},
-        {40, "XL", true},
-        {50, "L", true},
-        {73, "LXXIII", true},
-        {90, "XC", true},
-        {93, "XCIII", true},
-        {100, "C", true},
-        {400, "CD", true},
-        {500, "D", true},
-        {900, "CM", true},
-        {1000, "M", true},
-        {1984, "MCMLXXXIV", true},
-        {2023, "MMXXIII", true},
-        {3999, "MMMCMXCIX", true},
-        {0, "", false}, // Error case
-        {4000, "", false}, // Error case
-        {-1, "", false} // Error case
-    };
+// Test case structure for fromRoman conversion
+struct FromRomanTestCase {
+    std::string roman;
+    int expected;
+    bool shouldSucceed;
 
-    for (const auto& [number, expected, shouldSucceed] : testCases) {
-        std::string result = Converter::toRoman(number);
+    static std::string GetTestName(
+        const TestParamInfo<FromRomanTestCase>& info
+    ) {
+        return info.param.roman.empty() ? "Empty" : "Roman_" + info.param.roman;
+    }
+};
 
-        if (shouldSucceed) {
-            EXPECT_FALSE(result.empty()) << "toRoman(" << number << ") should succeed";
-            EXPECT_EQ(expected, result)
-                << "toRoman(" << number << ") = " << result
-                << ", expected " << expected;
-        } else {
-            EXPECT_TRUE(result.empty())
-                << "toRoman(" << number << ") should return empty string for error";
-        }
+// Parameterized test class for toRoman conversion
+class ToRomanTest : public TestWithParam<ToRomanTestCase> {};
+
+// Parameterized test class for fromRoman conversion
+class FromRomanTest : public TestWithParam<FromRomanTestCase> {};
+
+TEST_P(ToRomanTest, ConvertToRoman) {
+    const auto& [number, expected, shouldSucceed] = GetParam();
+    const std::string result = Converter::toRoman(number);
+
+    if (shouldSucceed) {
+        EXPECT_FALSE(result.empty()) << "toRoman(" << number << ") should succeed";
+        EXPECT_EQ(expected, result)
+            << "toRoman(" << number << ") = " << result
+            << ", expected " << expected;
+    } else {
+        EXPECT_TRUE(result.empty())
+            << "toRoman(" << number << ") should return empty string for error";
     }
 }
 
-// Test fromRoman conversion
-TEST_F(RomanNumeralsFullTest, FromRoman) {
-    const std::vector<FromRomanTestCase> testCases = {
-        {"I", 1, true},
-        {"II", 2, true},
-        {"III", 3, true},
-        {"IV", 4, true},
-        {"V", 5, true},
-        {"IX", 9, true},
-        {"X", 10, true},
-        {"XL", 40, true},
-        {"L", 50, true},
-        {"LXXIII", 73, true},
-        {"XC", 90, true},
-        {"XCIII", 93, true},
-        {"C", 100, true},
-        {"CD", 400, true},
-        {"D", 500, true},
-        {"CM", 900, true},
-        {"M", 1000, true},
-        {"MCMLXXXIV", 1984, true},
-        {"MMXXIII", 2023, true},
-        {"MMMCMXCIX", 3999, true},
-        {"", 0, false}, // Error case
-        {"MMMM", 0, false}, // Error case (4000)
-        {"ABC", 0, false}, // Error case (invalid chars)
-        {"MMMCMXCIY", 0, false} // Error case (invalid char Y)
-    };
+TEST_P(FromRomanTest, ConvertFromRoman) {
+    const auto& [roman, expected, shouldSucceed] = GetParam();
+    int result = 0;
+    const bool success = Converter::fromRoman(roman, result);
 
-    for (const auto& [roman, expected, shouldSucceed] : testCases) {
-        int result = 0;
-        bool success = Converter::fromRoman(roman, result);
-
-        if (shouldSucceed) {
-            EXPECT_TRUE(success) << "fromRoman(" << roman << ") should succeed";
-            EXPECT_EQ(expected, result)
-                << "fromRoman(" << roman << ") = " << result
-                << ", expected " << expected;
-        } else {
-            EXPECT_FALSE(success)
-                << "fromRoman(" << roman << ") should return false for error";
-        }
+    if (shouldSucceed) {
+        EXPECT_TRUE(success) << "fromRoman(" << roman << ") should succeed";
+        EXPECT_EQ(expected, result)
+            << "fromRoman(" << roman << ") = " << result
+            << ", expected " << expected;
+    } else {
+        EXPECT_FALSE(success)
+            << "fromRoman(" << roman << ") should return false for error";
     }
 }
 
-// Test round-trip conversion
-TEST_F(RomanNumeralsFullTest, RoundTrip) {
-    // Test every 100 numbers to keep test runtime reasonable
-    for (int i = 1; i <= 3999; i += 100) {
-        // Convert int to Roman
-        std::string roman = Converter::toRoman(i);
-        ASSERT_FALSE(roman.empty()) << "toRoman(" << i << ") failed";
+INSTANTIATE_TEST_SUITE_P(
+    RomanNumerals,
+    ToRomanTest,
+    Values(
+        ToRomanTestCase{1, "I", true},
+        ToRomanTestCase{2, "II", true},
+        ToRomanTestCase{3, "III", true},
+        ToRomanTestCase{4, "IV", true},
+        ToRomanTestCase{5, "V", true},
+        ToRomanTestCase{9, "IX", true},
+        ToRomanTestCase{10, "X", true},
+        ToRomanTestCase{40, "XL", true},
+        ToRomanTestCase{50, "L", true},
+        ToRomanTestCase{73, "LXXIII", true},
+        ToRomanTestCase{90, "XC", true},
+        ToRomanTestCase{93, "XCIII", true},
+        ToRomanTestCase{100, "C", true},
+        ToRomanTestCase{400, "CD", true},
+        ToRomanTestCase{500, "D", true},
+        ToRomanTestCase{900, "CM", true},
+        ToRomanTestCase{1000, "M", true},
+        ToRomanTestCase{1984, "MCMLXXXIV", true},
+        ToRomanTestCase{2023, "MMXXIII", true},
+        ToRomanTestCase{3999, "MMMCMXCIX", true},
+        ToRomanTestCase{0, "", false}, // Error case
+        ToRomanTestCase{4000, "", false}, // Error case
+        ToRomanTestCase{-1, "", false} // Error case
+    ),
+    ToRomanTestCase::GetTestName
+);
 
-        // Convert Roman back to int
-        int result = 0;
-        bool success = Converter::fromRoman(roman, result);
-        ASSERT_TRUE(success) << "fromRoman(" << roman << ") failed";
+INSTANTIATE_TEST_SUITE_P(
+    RomanNumerals,
+    FromRomanTest,
+    Values(
+        // Valid cases - single numerals
+        FromRomanTestCase{"I", 1, true},
+        FromRomanTestCase{"V", 5, true},
+        FromRomanTestCase{"X", 10, true},
+        FromRomanTestCase{"L", 50, true},
+        FromRomanTestCase{"C", 100, true},
+        FromRomanTestCase{"D", 500, true},
+        FromRomanTestCase{"M", 1000, true},
 
-        // Verify the round trip conversion
-        EXPECT_EQ(i, result)
-                << "Round trip failed: " << i << " -> "
-                << roman << " -> " << result;
-    }
+        // Valid cases - common combinations
+        FromRomanTestCase{"II", 2, true},
+        FromRomanTestCase{"III", 3, true},
+        FromRomanTestCase{"IV", 4, true},
+        FromRomanTestCase{"IX", 9, true},
+        FromRomanTestCase{"XL", 40, true},
+        FromRomanTestCase{"LXXIII", 73, true},
+        FromRomanTestCase{"XC", 90, true},
+        FromRomanTestCase{"XCIII", 93, true},
+        FromRomanTestCase{"CD", 400, true},
+        FromRomanTestCase{"CM", 900, true},
+
+        // Valid cases - large numbers
+        FromRomanTestCase{"MCMLXXXIV", 1984, true},
+        FromRomanTestCase{"MMXXIII", 2023, true},
+        FromRomanTestCase{"MMMCMXCIX", 3999, true},
+
+        // Error cases
+        FromRomanTestCase{"", 0, false},
+        FromRomanTestCase{"MMMM", 0, false}, // Error case (4000)
+        FromRomanTestCase{"ABC", 0, false}, // Invalid chars
+        FromRomanTestCase{"MMMCMXCIY", 0, false} // Invalid char Y
+    ),
+    FromRomanTestCase::GetTestName
+);
+
+// Test round-trip conversion with parameterized test
+class RoundTripTest : public TestWithParam<int> {};
+
+TEST_P(RoundTripTest, ConvertBothWays) {
+    const int input = GetParam();
+    
+    // Convert int to Roman
+    const std::string roman = Converter::toRoman(input);
+    ASSERT_FALSE(roman.empty()) << "toRoman(" << input << ") failed";
+
+    // Convert Roman back to int
+    int result = 0;
+    bool success = Converter::fromRoman(roman, result);
+    ASSERT_TRUE(success) << "fromRoman(" << roman << ") failed";
+
+    // Verify the round trip conversion
+    EXPECT_EQ(input, result)
+            << "Round trip failed: " << input << " -> "
+            << roman << " -> " << result;
 }
+
+INSTANTIATE_TEST_SUITE_P(
+    RomanNumerals,
+    RoundTripTest,
+    Range(1, 4000, 100)
+);

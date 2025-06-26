@@ -1,70 +1,89 @@
 #include <gtest/gtest.h>
-#include <string>
-#include <vector>
 
 #include "../../../../projects/cyber_dojo/fizzbuzz_plus/fizzbuzz_plus_take_01/src/fizzbuzz_plus.hpp"
 #include "../../../../projects/cyber_dojo/fizzbuzz_plus/fizzbuzz_plus_take_01/src/utils/utils.hpp"
 
 using namespace ::testing;
 
-class FizzbuzzPlusTest : public Test {
+struct SingleNumberTestCase {
+    int input;
+    std::string expected;
+
+    static std::string GetTestName(
+        const TestParamInfo<SingleNumberTestCase>& info
+    ) {
+        return "Input_" + std::to_string(info.param.input);
+    }
 };
 
-TEST_F(FizzbuzzPlusTest, SingleNumbers) {
-    struct TestCase {
-        int input;
-        std::string expected;
-    };
+class FizzbuzzSingleTest : public TestWithParam<SingleNumberTestCase> {
+};
 
-    std::vector<TestCase> tests = {
-        {1, "1"},
-        {2, "2"},
-        {3, "Fizz"},
-        {4, "4"},
-        {5, "Buzz"},
-        {6, "Fizz"},
-        {10, "Buzz"},
-        {12, "Fizz"},
-        {13, "Fizz"},
-        {15, "FizzBuzz"},
-        {52, "Buzz"}
-    };
-
-    for (const auto& [input, expected] : tests) {
-        std::string result = fizzbuzz(input);
-        EXPECT_EQ(result, expected) << "Fizzbuzz(" << input << ") = "
-                                         << result << ", want " << expected;
-    }
+TEST_P(FizzbuzzSingleTest, CheckSingleNumber) {
+    const auto& [input, expected] = GetParam();
+    const std::string result = fizzbuzz(input);
+    EXPECT_EQ(result, expected)
+        << "Fizzbuzz(" << input << ") = "
+        << result << ", want " << expected;
 }
 
-TEST_F(FizzbuzzPlusTest, Range) {
-    struct TestCase {
-        int input;
-        std::string expected;
-    };
+INSTANTIATE_TEST_SUITE_P(
+    FizzbuzzTests,
+    FizzbuzzSingleTest,
+    testing::Values(
+        SingleNumberTestCase{1, "1"},
+        SingleNumberTestCase{2, "2"},
+        SingleNumberTestCase{3, "Fizz"},
+        SingleNumberTestCase{4, "4"},
+        SingleNumberTestCase{5, "Buzz"},
+        SingleNumberTestCase{6, "Fizz"},
+        SingleNumberTestCase{10, "Buzz"},
+        SingleNumberTestCase{12, "Fizz"},
+        SingleNumberTestCase{13, "Fizz"},
+        SingleNumberTestCase{15, "FizzBuzz"},
+        SingleNumberTestCase{52, "Buzz"}
+    ),
+    SingleNumberTestCase::GetTestName
+);
 
-    const std::vector<TestCase> tests = {
-        {1, "1"},
-        {2, "1\n2"},
-        {15, "1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\nFizz\n14\nFizzBuzz"}
-    };
+struct RangeTestCase {
+    int input;
+    std::string expected;
 
-    for (const auto& [input, expected] : tests) {
-        // Generate FizzBuzz range
-        auto range_result = fizzbuzz_range(input);
-
-        // Join the results
-        std::string joined = string_join(range_result);
-
-        EXPECT_EQ(joined, expected) << "string_join(fizzbuzz_range(" << input << ")) = "
-                                    << joined << ", want " << expected;
+    static std::string GetTestName(
+        const TestParamInfo<RangeTestCase>& info
+    ) {
+        return "Range_" + std::to_string(info.param.input);
     }
+};
+
+class FizzbuzzRangeTest : public TestWithParam<RangeTestCase> {
+};
+
+TEST_P(FizzbuzzRangeTest, CheckRange) {
+    const auto& [input, expected] = GetParam();
+    const auto range_result = fizzbuzz_range(input);
+    const std::string joined = string_join(range_result);
+
+    EXPECT_EQ(joined, expected)
+        << "string_join(fizzbuzz_range(" << input << ")) = "
+        << joined << ", want " << expected;
 }
 
-TEST_F(FizzbuzzPlusTest, RangeUntilOneHundred) {
+INSTANTIATE_TEST_SUITE_P(
+    FizzbuzzTests,
+    FizzbuzzRangeTest,
+    testing::Values(
+        RangeTestCase{1, "1"},
+        RangeTestCase{2, "1\n2"},
+        RangeTestCase{15,
+            "1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\nFizz\n14\nFizzBuzz"}
+    ),
+    RangeTestCase::GetTestName
+);
+
+TEST(FizzbuzzTest, RangeUntilOneHundred) {
     constexpr int n = 100;
-
-    // Generate FizzBuzz range
     const auto range_result = fizzbuzz_range(n);
 
     // Create expected string for 1-100 FizzBuzz sequence
@@ -79,8 +98,6 @@ TEST_F(FizzbuzzPlusTest, RangeUntilOneHundred) {
     expected += "77\nFizz\n79\nBuzz\nFizz\n82\nFizz\nFizz\nBuzz\n86\nFizz\n88\n89\n";
     expected += "FizzBuzz\n91\n92\nFizz\n94\nBuzz\nFizz\n97\n98\nFizz\nBuzz";
 
-    // Join the results
     const std::string joined = string_join(range_result);
-
     EXPECT_EQ(joined, expected) << "FizzbuzzRange(100) produced incorrect result";
 }
