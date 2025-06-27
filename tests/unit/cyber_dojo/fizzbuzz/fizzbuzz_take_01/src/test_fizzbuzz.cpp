@@ -3,20 +3,20 @@
 #include "../../../../projects/cyber_dojo/fizzbuzz/fizzbuzz_take_01/src/fizzbuzz.hpp"
 #include "../../../../projects/cyber_dojo/fizzbuzz/fizzbuzz_take_01/src/utils/utils.hpp"
 
-using namespace ::testing;
-
 struct SingleNumberTestCase {
     int input;
     std::string expected;
 
     static std::string GetTestName(
-        const TestParamInfo<SingleNumberTestCase>& info
+        const testing::TestParamInfo<SingleNumberTestCase>& info
     ) {
-        return "Input_" + std::to_string(info.param.input);
+        return "Input_" + std::to_string(info.param.input)
+               + "_Expected_" + info.param.expected;
     }
 };
 
-class FizzbuzzSingleTest : public TestWithParam<SingleNumberTestCase> {
+class FizzbuzzSingleTest : public testing::TestWithParam<
+    SingleNumberTestCase> {
 };
 
 TEST_P(FizzbuzzSingleTest, CheckSingleNumber) {
@@ -45,18 +45,31 @@ INSTANTIATE_TEST_SUITE_P(
     SingleNumberTestCase::GetTestName
 );
 
+std::string processRangeExpectedString(const std::string& input, const int len) {
+    std::string result;
+    for (size_t i = 0; i < std::min(input.length(), static_cast<size_t>(len)); i++) {
+        result += (input[i] == '\n') ? '_' : input[i];
+    }
+    if (input.length() > len) {
+        result += "__etc";
+    }
+    return result;
+}
+
 struct RangeTestCase {
     int input;
     std::string expected;
 
     static std::string GetTestName(
-        const TestParamInfo<RangeTestCase>& info
+        const testing::TestParamInfo<RangeTestCase>& info
     ) {
-        return "Range_" + std::to_string(info.param.input);
+        return "Range_" + std::to_string(info.param.input)
+               + "_Expected_" + processRangeExpectedString(info.param.expected, 10);
     }
 };
 
-class FizzbuzzRangeTest : public TestWithParam<RangeTestCase> {
+class FizzbuzzRangeTest : public testing::TestWithParam<
+    RangeTestCase> {
 };
 
 TEST_P(FizzbuzzRangeTest, CheckRange) {
@@ -97,4 +110,9 @@ TEST(FizzbuzzTest, RangeUntilOneHundred) {
 
     const std::string joined = string_join(range_result);
     EXPECT_EQ(joined, expected) << "FizzbuzzRange(100) produced incorrect result";
+}
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }

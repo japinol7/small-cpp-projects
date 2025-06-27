@@ -2,14 +2,12 @@
 
 #include "../../../../projects/cyber_dojo/isbn/isbn_take_01/src/isbn.hpp"
 
-using namespace ::testing;
-
 struct IsbnTestCase {
     std::string input_isbn;
     std::string expected;
 
     static std::string GetTestName(
-        const TestParamInfo<IsbnTestCase>& info
+        const testing::TestParamInfo<IsbnTestCase>& info
     ) {
         // Replace invalid filename characters with underscores
         std::string name = info.param.input_isbn;
@@ -20,7 +18,8 @@ struct IsbnTestCase {
     }
 };
 
-class IsbnValidationTest : public TestWithParam<IsbnTestCase> {
+class IsbnValidationTest : public testing::TestWithParam<
+    IsbnTestCase> {
 };
 
 TEST_P(IsbnValidationTest, ValidateISBN) {
@@ -35,7 +34,7 @@ TEST_P(IsbnValidationTest, ValidateISBN) {
 INSTANTIATE_TEST_SUITE_P(
     ISBN13Tests,
     IsbnValidationTest,
-    Values(
+    testing::Values(
         IsbnTestCase{"9780470059029", "true"},
         IsbnTestCase{"978 0 471 48648 0", "true"},
         IsbnTestCase{"978-0596809485", "true"},
@@ -55,7 +54,7 @@ INSTANTIATE_TEST_SUITE_P(
 INSTANTIATE_TEST_SUITE_P(
     ISBN10Tests,
     IsbnValidationTest,
-    Values(
+    testing::Values(
         IsbnTestCase{"0471958697", "true"},
         IsbnTestCase{"0 471 60695 2", "true"},
         IsbnTestCase{"0-470-84525-2", "true"},
@@ -76,4 +75,9 @@ TEST(IsbnTest, EdgeCases) {
     const auto emptyResult = ISBN::validate("");
     ASSERT_TRUE(emptyResult.has_value());
     EXPECT_EQ(emptyResult.value(), "false");
+}
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }

@@ -2,9 +2,7 @@
 
 #include "../../../../projects/cyber_dojo/print_diamond/print_diamond_take_01/src/print_diamond.hpp"
 
-using namespace ::testing;
-
-class PrintDiamondTest : public Test {
+class PrintDiamondTest : public testing::Test {
 protected:
     // Test case structure for parameterized tests
     struct TestCase {
@@ -18,7 +16,7 @@ struct EmptyInputTestCase {
     std::string expected;
 
     static std::string GetTestName(
-        const TestParamInfo<EmptyInputTestCase>& info
+        const testing::TestParamInfo<EmptyInputTestCase>& info
     ) {
         if (info.param.input == '\0') {
             return "EmptyInput";
@@ -30,7 +28,8 @@ struct EmptyInputTestCase {
     }
 };
 
-class PrintDiamondEmptyInputTest : public TestWithParam<EmptyInputTestCase> {
+class PrintDiamondEmptyInputTest : public testing::TestWithParam<
+    EmptyInputTestCase> {
 };
 
 TEST_P(PrintDiamondEmptyInputTest, CheckInvalidInput) {
@@ -74,7 +73,7 @@ TEST_F(PrintDiamondTest, LetterA) {
     const std::string expected = "A";
 
     // Create diamond
-    Diamond diamond('A');
+    const Diamond diamond('A');
 
     // Check the result
     EXPECT_EQ(diamond.toString(), expected);
@@ -82,12 +81,13 @@ TEST_F(PrintDiamondTest, LetterA) {
 
 // Test case for letter B
 TEST_F(PrintDiamondTest, LetterB) {
-    const std::string expected = " A \n"
-                               "B B\n"
-                               " A ";
+    const std::string expected = ""
+        " A \n"
+        "B B\n"
+        " A ";
 
     // Create diamond
-    Diamond diamond('B');
+    const Diamond diamond('B');
 
     // Check the result
     EXPECT_EQ(diamond.toString(), expected);
@@ -95,14 +95,15 @@ TEST_F(PrintDiamondTest, LetterB) {
 
 // Test case for letter C
 TEST_F(PrintDiamondTest, LetterC) {
-    const std::string expected = "  A  \n"
-                               " B B \n"
-                               "C   C\n"
-                               " B B \n"
-                               "  A  ";
+    const std::string expected = ""
+        "  A  \n"
+        " B B \n"
+        "C   C\n"
+        " B B \n"
+        "  A  ";
 
     // Create diamond
-    Diamond diamond('C');
+    const Diamond diamond('C');
 
     // Check the result
     EXPECT_EQ(diamond.toString(), expected);
@@ -110,16 +111,17 @@ TEST_F(PrintDiamondTest, LetterC) {
 
 // Test case for letter D
 TEST_F(PrintDiamondTest, LetterD) {
-    const std::string expected = "   A   \n"
-                               "  B B  \n"
-                               " C   C \n"
-                               "D     D\n"
-                               " C   C \n"
-                               "  B B  \n"
-                               "   A   ";
+    const std::string expected = ""
+        "   A   \n"
+        "  B B  \n"
+        " C   C \n"
+        "D     D\n"
+        " C   C \n"
+        "  B B  \n"
+        "   A   ";
 
     // Create diamond
-    Diamond diamond('D');
+    const Diamond diamond('D');
 
     // Check the result
     EXPECT_EQ(diamond.toString(), expected);
@@ -127,20 +129,21 @@ TEST_F(PrintDiamondTest, LetterD) {
 
 // Test case for letter F
 TEST_F(PrintDiamondTest, LetterF) {
-    const std::string expected = "     A     \n"
-                               "    B B    \n"
-                               "   C   C   \n"
-                               "  D     D  \n"
-                               " E       E \n"
-                               "F         F\n"
-                               " E       E \n"
-                               "  D     D  \n"
-                               "   C   C   \n"
-                               "    B B    \n"
-                               "     A     ";
+    const std::string expected = ""
+        "     A     \n"
+        "    B B    \n"
+        "   C   C   \n"
+        "  D     D  \n"
+        " E       E \n"
+        "F         F\n"
+        " E       E \n"
+        "  D     D  \n"
+        "   C   C   \n"
+        "    B B    \n"
+        "     A     ";
 
     // Create diamond
-    Diamond diamond('F');
+    const Diamond diamond('F');
 
     // Check the result
     EXPECT_EQ(diamond.toString(), expected);
@@ -148,18 +151,19 @@ TEST_F(PrintDiamondTest, LetterF) {
 
 // Test case for letter E with output
 TEST_F(PrintDiamondTest, LetterEWithOutput) {
-    const std::string expected = "    A    \n"
-                               "   B B   \n"
-                               "  C   C  \n"
-                               " D     D \n"
-                               "E       E\n"
-                               " D     D \n"
-                               "  C   C  \n"
-                               "   B B   \n"
-                               "    A    ";
+    const std::string expected = ""
+        "    A    \n"
+        "   B B   \n"
+        "  C   C  \n"
+        " D     D \n"
+        "E       E\n"
+        " D     D \n"
+        "  C   C  \n"
+        "   B B   \n"
+        "    A    ";
 
     // Create diamond
-    Diamond diamond('E');
+    const Diamond diamond('E');
 
     // Check the result
     EXPECT_EQ(diamond.toString(), expected);
@@ -171,14 +175,15 @@ TEST_F(PrintDiamondTest, LetterEWithOutput) {
 // Test for lowercase letter conversion
 TEST_F(PrintDiamondTest, LowercaseLetterConversion) {
     // Expected output for 'C' (same as for uppercase 'C')
-    const std::string expected = "  A  \n"
-                               " B B \n"
-                               "C   C\n"
-                               " B B \n"
-                               "  A  ";
+    const std::string expected = ""
+        "  A  \n"
+        " B B \n"
+        "C   C\n"
+        " B B \n"
+        "  A  ";
 
     // Create diamond with lowercase 'c'
-    Diamond diamond('c');
+    const Diamond diamond('c');
 
     // Check that it produces the same output as uppercase 'C'
     EXPECT_EQ(diamond.toString(), expected);
@@ -198,4 +203,9 @@ TEST_F(PrintDiamondTest, PatternConsistency) {
     EXPECT_EQ(pattern[0], pattern[6]);
     EXPECT_EQ(pattern[1], pattern[5]);
     EXPECT_EQ(pattern[2], pattern[4]);
+}
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }

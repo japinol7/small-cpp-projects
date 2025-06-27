@@ -2,14 +2,12 @@
 
 #include "../../../../projects/cyber_dojo/filename_range/filename_range_take_01/src/filename_range.hpp"
 
-using namespace ::testing;
-
 struct FilenameTestCase {
     std::string filename;
     std::vector<int> expected;
 
     static std::string GetTestName(
-        const TestParamInfo<FilenameTestCase>& info
+        const testing::TestParamInfo<FilenameTestCase>& info
     ) {
         if (info.param.filename.empty()) {
             return std::to_string(info.index) + "_" + "Empty";
@@ -25,7 +23,7 @@ struct FilenameTestCase {
     }
 };
 
-class FilenameRangeTest : public TestWithParam<FilenameTestCase> {
+class FilenameRangeTest : public testing::TestWithParam<FilenameTestCase> {
 };
 
 TEST_P(FilenameRangeTest, CheckRange) {

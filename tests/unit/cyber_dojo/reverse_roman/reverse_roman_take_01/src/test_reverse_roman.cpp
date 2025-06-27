@@ -2,7 +2,6 @@
 
 #include "../../../../projects/cyber_dojo/reverse_roman/reverse_roman_take_01/src/reverse_roman.hpp"
 
-using namespace ::testing;
 using namespace ReverseRoman;
 
 struct RomanConversionTestCase {
@@ -11,16 +10,18 @@ struct RomanConversionTestCase {
     bool shouldSucceed;
 
     static std::string GetTestName(
-        const TestParamInfo<RomanConversionTestCase>& info
+        const testing::TestParamInfo<RomanConversionTestCase>& info
     ) {
         if (info.param.roman.empty()) {
             return "Empty_String";
         }
-        return "Roman_" + info.param.roman;
+        return "Roman_" + info.param.roman
+               + "_Expected_" + std::to_string(info.param.expected);
     }
 };
 
-class RomanConversionTest : public TestWithParam<RomanConversionTestCase> {
+class RomanConversionTest : public testing::TestWithParam<
+    RomanConversionTestCase> {
 };
 
 TEST_P(RomanConversionTest, FromRoman) {
@@ -77,3 +78,8 @@ INSTANTIATE_TEST_SUITE_P(
     ),
     RomanConversionTestCase::GetTestName
 );
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}

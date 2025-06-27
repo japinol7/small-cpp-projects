@@ -1,11 +1,8 @@
 #include <gtest/gtest.h>
-#include <string>
-#include <vector>
+
 #include "../../../../projects/cyber_dojo/game_of_life/game_of_life_take_01/src/game_of_life.hpp"
 
-using namespace ::testing;
-
-class GameOfLifeTest : public Test {
+class GameOfLifeTest : public testing::Test {
 protected:
     // Helper method to create a game with a specific pattern
     static GameOfLife createGameWithPattern(
@@ -209,4 +206,9 @@ TEST_F(GameOfLifeTest, StepOverpopulationCustomCellRepr) {
 
     EXPECT_FALSE(game.getCell(1, 1))
         << "Expected cell (1,1) to die from overpopulation";
+}
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }

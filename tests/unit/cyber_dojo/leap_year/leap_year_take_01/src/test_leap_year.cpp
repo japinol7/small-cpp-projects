@@ -55,3 +55,8 @@ INSTANTIATE_TEST_SUITE_P(
     ),
     LeapYearTestCase::GetTestName
 );
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}

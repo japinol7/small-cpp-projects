@@ -1,8 +1,7 @@
 #include <gtest/gtest.h>
-#include <string>
+
 #include "../../../../projects/various/roman_numerals_full/roman_numerals_full_take_01/src/roman_numerals_full.hpp"
 
-using namespace ::testing;
 using namespace RomanNumeralsFull;
 
 // Test case structure for toRoman conversion
@@ -12,12 +11,13 @@ struct ToRomanTestCase {
     bool shouldSucceed;
 
     static std::string GetTestName(
-        const TestParamInfo<ToRomanTestCase>& info
+        const testing::TestParamInfo<ToRomanTestCase>& info
     ) {
         // Replace invalid filename characters with underscores
         std::string name = std::to_string(info.param.number);
         std::replace(name.begin(), name.end(), '-', '_');
-        return "Number_" + name;
+        return "Number_" + name
+               + "_Expected_" + info.param.expected;
     }
 };
 
@@ -28,17 +28,21 @@ struct FromRomanTestCase {
     bool shouldSucceed;
 
     static std::string GetTestName(
-        const TestParamInfo<FromRomanTestCase>& info
+        const testing::TestParamInfo<FromRomanTestCase>& info
     ) {
-        return info.param.roman.empty() ? "Empty" : "Roman_" + info.param.roman;
+        if (info.param.roman.empty()) {
+            return "Empty_String";
+        }
+        return "Roman_" + info.param.roman
+               + "_Expected_" + std::to_string(info.param.expected);
     }
 };
 
 // Parameterized test class for toRoman conversion
-class ToRomanTest : public TestWithParam<ToRomanTestCase> {};
+class ToRomanTest : public testing::TestWithParam<ToRomanTestCase> {};
 
 // Parameterized test class for fromRoman conversion
-class FromRomanTest : public TestWithParam<FromRomanTestCase> {};
+class FromRomanTest : public testing::TestWithParam<FromRomanTestCase> {};
 
 TEST_P(ToRomanTest, ConvertToRoman) {
     const auto& [number, expected, shouldSucceed] = GetParam();
@@ -74,7 +78,7 @@ TEST_P(FromRomanTest, ConvertFromRoman) {
 INSTANTIATE_TEST_SUITE_P(
     RomanNumerals,
     ToRomanTest,
-    Values(
+    testing::Values(
         ToRomanTestCase{1, "I", true},
         ToRomanTestCase{2, "II", true},
         ToRomanTestCase{3, "III", true},
@@ -105,7 +109,7 @@ INSTANTIATE_TEST_SUITE_P(
 INSTANTIATE_TEST_SUITE_P(
     RomanNumerals,
     FromRomanTest,
-    Values(
+    testing::Values(
         // Valid cases - single numerals
         FromRomanTestCase{"I", 1, true},
         FromRomanTestCase{"V", 5, true},
@@ -142,7 +146,7 @@ INSTANTIATE_TEST_SUITE_P(
 );
 
 // Test round-trip conversion with parameterized test
-class RoundTripTest : public TestWithParam<int> {};
+class RoundTripTest : public testing::TestWithParam<int> {};
 
 TEST_P(RoundTripTest, ConvertBothWays) {
     const int input = GetParam();
@@ -165,5 +169,10 @@ TEST_P(RoundTripTest, ConvertBothWays) {
 INSTANTIATE_TEST_SUITE_P(
     RomanNumerals,
     RoundTripTest,
-    Range(1, 4000, 100)
+    testing::Range(1, 4000, 100)
 );
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}

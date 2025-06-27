@@ -2,7 +2,6 @@
 
 #include "../../../../projects/cyber_dojo/roman_numerals/roman_numerals_take_01/src/roman_numerals.hpp"
 
-using namespace ::testing;
 using namespace RomanNumerals;
 
 struct RomanNumeralTestCase {
@@ -11,16 +10,18 @@ struct RomanNumeralTestCase {
     bool shouldSucceed;
 
     static std::string GetTestName(
-        const TestParamInfo<RomanNumeralTestCase>& info
+        const testing::TestParamInfo<RomanNumeralTestCase>& info
     ) {
         // Replace invalid filename characters with underscores
         std::string name = std::to_string(info.param.number);
         std::replace(name.begin(), name.end(), '-', '_');
-        return "Number_" + name;
+        return "Number_" + name
+               + "_Expected_" + info.param.expected;
     }
 };
 
-class RomanNumeralsTest : public TestWithParam<RomanNumeralTestCase> {
+class RomanNumeralsTest : public testing::TestWithParam<
+    RomanNumeralTestCase> {
 };
 
 TEST_P(RomanNumeralsTest, ToRoman) {
@@ -68,3 +69,8 @@ INSTANTIATE_TEST_SUITE_P(
     ),
     RomanNumeralTestCase::GetTestName
 );
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}

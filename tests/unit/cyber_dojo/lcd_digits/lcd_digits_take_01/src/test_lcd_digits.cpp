@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <string>
+
 #include "../../../../projects/cyber_dojo/lcd_digits/lcd_digits_take_01/src/lcd_digits.hpp"
 
 using namespace LcdDisplay;
@@ -160,4 +160,9 @@ TEST_F(LcdDigitsTest, NegativeNumberError) {
     const auto result = lcd.Generate(-1);
     ASSERT_FALSE(result.has_value()) << "Should fail for negative number";
     EXPECT_EQ("Number must be non-negative", lcd.GetLastError());
+}
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }

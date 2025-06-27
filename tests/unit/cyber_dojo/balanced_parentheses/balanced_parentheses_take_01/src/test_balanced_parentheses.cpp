@@ -1,11 +1,9 @@
 #include <gtest/gtest.h>
-#include <string>
+
 #include "../../../../projects/cyber_dojo/balanced_parentheses/balanced_parentheses_take_01/src/balanced_parentheses.hpp"
 
-using namespace ::testing;
-
 // Test class for balanced parentheses checking
-class BalancedParenthesesTest : public Test {
+class BalancedParenthesesTest : public testing::Test {
 protected:
     // Setup method (empty for this test class)
     void SetUp() override {}
@@ -63,4 +61,9 @@ TEST_F(BalancedParenthesesTest, IncorrectlyNested) {
 
 TEST_F(BalancedParenthesesTest, Mismatched) {
     testUnbalanced("({)}");
+}
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }
