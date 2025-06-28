@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.26)
+cmake_minimum_required(VERSION 3.28)
 project(Google_tests_unit VERSION 1.17.0)
 
 
@@ -53,6 +53,22 @@ target_link_libraries(balanced_parentheses_tests_run
         gtest
 )
 
+# Count coins tests
+add_executable(count_coins_tests_run
+        cyber_dojo/count_coins/count_coins_take_01/src/test_count_coins.cpp
+)
+
+target_include_directories(count_coins_tests_run
+        PRIVATE ${gtest_SOURCE_DIR}/include
+        PRIVATE ${gtest_SOURCE_DIR}
+)
+
+target_link_libraries(count_coins_tests_run
+        PRIVATE
+        count_coins_lib
+        gtest_main
+        gtest
+)
 
 # Filename Range tests
 add_executable(filename_range_tests_run
@@ -70,7 +86,6 @@ target_link_libraries(filename_range_tests_run
         gtest_main
         gtest
 )
-
 
 # Game of life
 add_executable(game_of_life_tests_run
@@ -153,6 +168,23 @@ target_include_directories(lcd_digits_tests_run
 target_link_libraries(lcd_digits_tests_run
         PRIVATE
         lcd_digits_lib
+        gtest_main
+        gtest
+)
+
+# Mine Field tests
+add_executable(mine_field_tests_run
+        cyber_dojo/mine_field/mine_field_take_01/src/test_mine_field.cpp
+)
+
+target_include_directories(mine_field_tests_run
+        PRIVATE ${gtest_SOURCE_DIR}/include
+        PRIVATE ${gtest_SOURCE_DIR}
+)
+
+target_link_libraries(mine_field_tests_run
+        PRIVATE
+        mine_field_lib
         gtest_main
         gtest
 )
