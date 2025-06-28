@@ -2,7 +2,7 @@
 #include <vector>
 
 // Constructor with default coin denominations
-CountCoins::CountCoins() : coin_values_{
+CountCoins::CountCoins() : coin_values{
     25, // quarters
     10, // dimes
     5, // nickels
@@ -12,7 +12,7 @@ CountCoins::CountCoins() : coin_values_{
 
 // Constructor with custom coin denominations
 CountCoins::CountCoins(const std::vector<int>& coin_values)
-    : coin_values_(coin_values) {
+    : coin_values(coin_values) {
 }
 
 // Calculate the number of ways to make change for a given amount
@@ -29,7 +29,7 @@ int CountCoins::changes(const int amount) const {
     ways[0] = 1;
 
     // For each coin type
-    for (const int coin : coin_values_) {
+    for (const int coin : coin_values) {
         // For each amount from coin value to target amount
         for (int j = coin; j <= amount; j++) {
             ways[j] += ways[j - coin];

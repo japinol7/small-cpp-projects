@@ -17,7 +17,7 @@ public:
 
 private:
     // Coin values in cents
-    std::vector<int> coin_values_;
+    std::vector<int> coin_values;
 };
 
 #endif // COUNT_COINS_HPP
